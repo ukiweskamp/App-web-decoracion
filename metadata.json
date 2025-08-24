@@ -1,0 +1,5 @@
+{
+  "name": "Gestor de Inventario para Decoración",
+  "description": "Una aplicación de backoffice interna para gestionar productos y clientes de un negocio de decoración, utilizando Google Sheets como base de datos simple.",
+  "requestFramePermissions": []
+}
