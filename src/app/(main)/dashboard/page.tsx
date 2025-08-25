@@ -6,11 +6,14 @@ import Card from '@/components/ui/Card';
 
 const CURRENCY_SYMBOL = process.env.NEXT_PUBLIC_CURRENCY_SYMBOL || '$';
 
+type FilterPeriod = 'all_time' | 'today' | 'last_7_days' | 'this_month' | 'last_month' | 'this_year';
+
 const Dashboard: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [sales, setSales] = useState<Sale[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [filterPeriod, setFilterPeriod] = useState<FilterPeriod>('all_time');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,12 +40,51 @@ const Dashboard: React.FC = () => {
     };
     fetchData();
   }, []);
+  
+  const filteredSales = useMemo(() => {
+    if (filterPeriod === 'all_time') {
+      return sales;
+    }
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    return sales.filter(sale => {
+      const saleDate = new Date(sale.sale_date);
+      saleDate.setHours(0, 0, 0, 0); // Normalizar a medianoche
+
+      switch (filterPeriod) {
+        case 'today':
+          return saleDate.getTime() === today.getTime();
+        
+        case 'last_7_days': {
+          const sevenDaysAgo = new Date(today);
+          sevenDaysAgo.setDate(today.getDate() - 6); // Incluye hoy
+          return saleDate >= sevenDaysAgo;
+        }
+
+        case 'this_month':
+          return saleDate.getMonth() === today.getMonth() && saleDate.getFullYear() === today.getFullYear();
+
+        case 'last_month': {
+          const lastMonth = new Date(today);
+          lastMonth.setMonth(today.getMonth() - 1);
+          return saleDate.getMonth() === lastMonth.getMonth() && saleDate.getFullYear() === lastMonth.getFullYear();
+        }
+          
+        case 'this_year':
+          return saleDate.getFullYear() === today.getFullYear();
+          
+        default:
+          return true;
+      }
+    });
+  }, [sales, filterPeriod]);
 
   const stats = useMemo(() => {
     const productCostMap = new Map(products.map(p => [p.sku, p.cost]));
 
-    const totalRevenue = sales.reduce((acc, sale) => acc + sale.total_amount, 0);
-    const totalCostOfGoods = sales.reduce((acc, sale) => {
+    const totalRevenue = filteredSales.reduce((acc, sale) => acc + sale.total_amount, 0);
+    const totalCostOfGoods = filteredSales.reduce((acc, sale) => {
         const saleCost = sale.items.reduce((itemAcc, item) => {
             const cost = productCostMap.get(item.sku) || 0;
             return itemAcc + (cost * item.quantity);
@@ -59,14 +101,14 @@ const Dashboard: React.FC = () => {
     return {
       totalProducts: products.length,
       totalCustomers: customers.length,
-      totalSales: sales.length,
+      totalSales: filteredSales.length,
       totalRevenue,
       grossProfit,
       totalStockValue,
       lowStockItems,
       outOfStockItems
     };
-  }, [products, customers, sales]);
+  }, [products, customers, filteredSales]);
 
   if (isLoading) {
     return <div className="text-center p-8">Cargando dashboard...</div>;
@@ -74,7 +116,25 @@ const Dashboard: React.FC = () => {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">Dashboard</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+        <div className="flex items-center gap-2">
+            <label htmlFor="filterPeriod" className="text-sm font-medium">Filtrar:</label>
+            <select
+                id="filterPeriod"
+                value={filterPeriod}
+                onChange={(e) => setFilterPeriod(e.target.value as FilterPeriod)}
+                className="bg-white border border-gray-300 rounded-md shadow-sm px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+                <option value="all_time">Desde siempre</option>
+                <option value="today">Hoy</option>
+                <option value="last_7_days">Últimos 7 días</option>
+                <option value="this_month">Este mes</option>
+                <option value="last_month">Mes pasado</option>
+                <option value="this_year">Este año</option>
+            </select>
+        </div>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card title="Ingresos Totales">
            <p className="text-4xl font-bold text-green-600">{CURRENCY_SYMBOL}{stats.totalRevenue.toLocaleString('es-AR')}</p>
