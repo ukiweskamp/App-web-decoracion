@@ -42,9 +42,9 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ customer, onSave, onCancel 
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 p-2 sm:p-4">
       <Input label="Nombre Completo" name="name" value={formData.name} onChange={handleChange} required />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Input label="Email" name="email" type="email" value={formData.email} onChange={handleChange} />
         <Input label="Teléfono" name="phone" value={formData.phone} onChange={handleChange} />
       </div>
@@ -53,7 +53,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({ customer, onSave, onCancel 
         <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-1">Notas</label>
         <textarea name="notes" value={formData.notes} onChange={handleChange} rows={3} className="w-full px-3 py-2 bg-white text-gray-900 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"/>
       </div>
-      <div className="flex justify-end gap-4 pt-4">
+      <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-4 pt-4">
         <Button type="button" variant="secondary" onClick={onCancel}>Cancelar</Button>
         <Button type="submit">Guardar Cliente</Button>
       </div>

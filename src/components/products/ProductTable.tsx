@@ -44,17 +44,19 @@ const ProductTable: React.FC<ProductTableProps> = ({ products, onEdit, onDelete 
 
     return (
         <div className="bg-white shadow-sm rounded-lg border border-gray-200 overflow-x-auto">
-            <table className="w-full min-w-max text-sm text-left text-gray-500">
+            {/* Aviso para móviles */}
+            <div className="block md:hidden text-xs text-gray-400 px-4 py-2">Desliza la tabla &rarr;</div>
+            <table className="w-full min-w-[700px] text-sm text-left text-gray-500">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
-                        <th scope="col" className="px-6 py-3">SKU</th>
-                        <th scope="col" className="px-6 py-3">Nombre</th>
-                        <th scope="col" className="px-6 py-3 text-right">Stock</th>
-                        <th scope="col" className="px-6 py-3 text-right">Costo</th>
-                        <th scope="col" className="px-6 py-3 text-right">Precio</th>
-                        <th scope="col" className="px-6 py-3 text-right">Margen</th>
-                        <th scope="col" className="px-6 py-3">Estado</th>
-                        <th scope="col" className="px-6 py-3 text-right">Acciones</th>
+                        <th scope="col" className="px-4 py-3 md:px-6">SKU</th>
+                        <th scope="col" className="px-4 py-3 md:px-6">Nombre</th>
+                        <th scope="col" className="px-4 py-3 md:px-6 text-right">Stock</th>
+                        <th scope="col" className="px-4 py-3 md:px-6 text-right">Costo</th>
+                        <th scope="col" className="px-4 py-3 md:px-6 text-right">Precio</th>
+                        <th scope="col" className="px-4 py-3 md:px-6 text-right">Margen</th>
+                        <th scope="col" className="px-4 py-3 md:px-6">Estado</th>
+                        <th scope="col" className="px-4 py-3 md:px-6 text-right">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -67,19 +69,19 @@ const ProductTable: React.FC<ProductTableProps> = ({ products, onEdit, onDelete 
                             const margin = calculateMargin(product.price, product.cost);
                             return (
                                 <tr key={product.id} className="bg-white border-b hover:bg-gray-50">
-                                    <td className="px-6 py-4 font-mono text-gray-700">{product.sku}</td>
-                                    <td className="px-6 py-4 font-medium text-gray-900 flex items-center gap-3">
+                                    <td className="px-4 py-4 md:px-6 font-mono text-gray-700">{product.sku}</td>
+                                    <td className="px-4 py-4 md:px-6 font-medium text-gray-900 flex items-center gap-3">
                                         <img src={product.image_url || `https://via.placeholder.com/40x40/eee/999?text=${product.name.charAt(0)}`} alt={product.name} className="w-10 h-10 rounded-md object-cover" />
                                         {product.name}
                                     </td>
-                                    <td className="px-6 py-4 text-right">{product.stock}</td>
-                                    <td className="px-6 py-4 text-right">{CURRENCY_SYMBOL}{product.cost.toLocaleString('es-AR')}</td>
-                                    <td className="px-6 py-4 text-right">{CURRENCY_SYMBOL}{product.price.toLocaleString('es-AR')}</td>
-                                    <td className={`px-6 py-4 text-right ${margin.amount < 0 ? 'text-red-600' : 'text-green-600'}`}>
+                                    <td className="px-4 py-4 md:px-6 text-right">{product.stock}</td>
+                                    <td className="px-4 py-4 md:px-6 text-right">{CURRENCY_SYMBOL}{product.cost.toLocaleString('es-AR')}</td>
+                                    <td className="px-4 py-4 md:px-6 text-right">{CURRENCY_SYMBOL}{product.price.toLocaleString('es-AR')}</td>
+                                    <td className={`px-4 py-4 md:px-6 text-right ${margin.amount < 0 ? 'text-red-600' : 'text-green-600'}`}> 
                                         {CURRENCY_SYMBOL}{margin.amount.toLocaleString('es-AR')} ({margin.percent.toFixed(1)}%)
                                     </td>
-                                    <td className="px-6 py-4"><ProductStatusBadge product={product} /></td>
-                                    <td className="px-6 py-4 text-right">
+                                    <td className="px-4 py-4 md:px-6"><ProductStatusBadge product={product} /></td>
+                                    <td className="px-4 py-4 md:px-6 text-right">
                                         <div className="flex justify-end gap-2">
                                             <Button size="sm" variant="secondary" onClick={() => onEdit(product)}>Editar</Button>
                                             <Button size="sm" variant="danger" onClick={() => onDelete(product.id)}>Borrar</Button>

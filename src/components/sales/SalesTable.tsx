@@ -10,14 +10,16 @@ interface SalesTableProps {
 const SalesTable: React.FC<SalesTableProps> = ({ sales }) => {
   return (
     <div className="bg-white shadow-sm rounded-lg border border-gray-200 overflow-x-auto">
-      <table className="w-full min-w-max text-sm text-left text-gray-500">
+      {/* Aviso para móviles */}
+      <div className="block md:hidden text-xs text-gray-400 px-4 py-2">Desliza la tabla &rarr;</div>
+      <table className="w-full min-w-[600px] text-sm text-left text-gray-500">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
           <tr>
-            <th scope="col" className="px-6 py-3">ID Venta</th>
-            <th scope="col" className="px-6 py-3">Fecha</th>
-            <th scope="col" className="px-6 py-3">Cliente</th>
-            <th scope="col" className="px-6 py-3">Items</th>
-            <th scope="col" className="px-6 py-3 text-right">Monto Total</th>
+            <th scope="col" className="px-4 py-3 md:px-6">ID Venta</th>
+            <th scope="col" className="px-4 py-3 md:px-6">Fecha</th>
+            <th scope="col" className="px-4 py-3 md:px-6">Cliente</th>
+            <th scope="col" className="px-4 py-3 md:px-6">Items</th>
+            <th scope="col" className="px-4 py-3 md:px-6 text-right">Monto Total</th>
           </tr>
         </thead>
         <tbody>
@@ -30,17 +32,17 @@ const SalesTable: React.FC<SalesTableProps> = ({ sales }) => {
           ) : (
             sales.sort((a, b) => new Date(b.sale_date).getTime() - new Date(a.sale_date).getTime()).map((sale) => (
               <tr key={sale.id} className="bg-white border-b hover:bg-gray-50">
-                <td className="px-6 py-4 font-mono text-xs text-gray-600">{sale.id}</td>
-                <td className="px-6 py-4">{new Date(sale.sale_date).toLocaleDateString()}</td>
-                <td className="px-6 py-4 font-medium text-gray-900">{sale.customer_name}</td>
-                <td className="px-6 py-4">
+                <td className="px-4 py-4 md:px-6 font-mono text-xs text-gray-600">{sale.id}</td>
+                <td className="px-4 py-4 md:px-6">{new Date(sale.sale_date).toLocaleDateString()}</td>
+                <td className="px-4 py-4 md:px-6 font-medium text-gray-900">{sale.customer_name}</td>
+                <td className="px-4 py-4 md:px-6">
                     <ul className="text-xs">
                         {sale.items.map(item => (
                             <li key={item.sku}>{item.quantity} x {item.name}</li>
                         ))}
                     </ul>
                 </td>
-                <td className="px-6 py-4 text-right font-semibold text-gray-800">
+                <td className="px-4 py-4 md:px-6 text-right font-semibold text-gray-800">
                   {CURRENCY_SYMBOL}
                   {sale.total_amount.toLocaleString('es-AR')}
                 </td>

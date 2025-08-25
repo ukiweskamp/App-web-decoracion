@@ -91,7 +91,7 @@ const SaleForm: React.FC<SaleFormProps> = ({ products, customers, onSave, onCanc
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+  <form onSubmit={handleSubmit} className="space-y-6 p-2 sm:p-4">
       <div>
         <label htmlFor="customer" className="block text-sm font-medium text-gray-700 mb-1">Cliente</label>
         <select
@@ -108,7 +108,7 @@ const SaleForm: React.FC<SaleFormProps> = ({ products, customers, onSave, onCanc
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Añadir Producto</label>
-        <div className="flex gap-2">
+  <div className="flex flex-col gap-2 sm:flex-row">
             <select
                 value={productToAdd}
                 onChange={e => setProductToAdd(e.target.value)}
@@ -122,23 +122,23 @@ const SaleForm: React.FC<SaleFormProps> = ({ products, customers, onSave, onCanc
       </div>
       
       {items.length > 0 && (
-        <div className="space-y-2 border rounded-md p-3">
-            {items.map(item => (
-                <div key={item.sku} className="flex items-center gap-4">
-                    <span className="flex-grow">{item.name}</span>
-                     <Input 
-                        type="number"
-                        className="w-20 text-center"
-                        value={item.quantity}
-                        onChange={e => handleQuantityChange(item.sku, parseInt(e.target.value) || 1)}
-                        min={1}
-                        max={products.find(p => p.sku === item.sku)?.stock || 1}
-                     />
-                     <span>x {CURRENCY_SYMBOL}{item.price_at_sale.toLocaleString('es-AR')}</span>
-                     <Button type="button" variant="ghost" size="sm" onClick={() => handleRemoveItem(item.sku)}>X</Button>
-                </div>
-            ))}
+    <div className="space-y-2 border rounded-md p-3">
+      {items.map(item => (
+        <div key={item.sku} className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
+          <span className="flex-grow">{item.name}</span>
+           <Input 
+            type="number"
+            className="w-20 text-center"
+            value={item.quantity}
+            onChange={e => handleQuantityChange(item.sku, parseInt(e.target.value) || 1)}
+            min={1}
+            max={products.find(p => p.sku === item.sku)?.stock || 1}
+           />
+           <span>x {CURRENCY_SYMBOL}{item.price_at_sale.toLocaleString('es-AR')}</span>
+           <Button type="button" variant="ghost" size="sm" onClick={() => handleRemoveItem(item.sku)}>X</Button>
         </div>
+      ))}
+    </div>
       )}
 
        <div>
@@ -152,7 +152,7 @@ const SaleForm: React.FC<SaleFormProps> = ({ products, customers, onSave, onCanc
 
         {error && <p className="text-sm text-red-600">{error}</p>}
 
-      <div className="flex justify-end gap-4 pt-4 border-t">
+  <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-4 pt-4 border-t">
         <Button type="button" variant="secondary" onClick={onCancel}>Cancelar</Button>
         <Button type="submit">Guardar Venta</Button>
       </div>
