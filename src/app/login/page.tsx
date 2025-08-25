@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -24,16 +24,21 @@ export default function LoginPage() {
       });
 
       if (res.ok) {
+        // Mandamos a "/" y dejamos que la home redirija según sesión
         router.push('/');
-        router.refresh(); // Asegura que la página se recargue para que el middleware actúe
+        router.refresh();
       } else {
-        const data = await res.json();
-        setError(data.message || 'El PIN es incorrecto.');
+        let msg = 'El PIN es incorrecto.';
+        try {
+          const data = await res.json();
+          msg = data?.message || msg;
+        } catch {}
+        setError(msg);
       }
-    } catch (err) {
+    } catch {
       setError('Ocurrió un error de red. Inténtalo de nuevo.');
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
 
@@ -48,6 +53,7 @@ export default function LoginPage() {
             Ingresa tu PIN para continuar
           </p>
         </div>
+
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <Input
             id="pin"
