@@ -13,18 +13,17 @@ const ProductStatusBadge: React.FC<ProductStatusBadgeProps> = ({ product }) => {
     const isOutOfStock = product.stock === 0;
 
     if (isOutOfStock) {
-        return <span className="px-2 py-1 text-xs font-semibold text-red-800 bg-red-100 rounded-full">Agotado</span>;
+    return <span className="px-2 py-1 text-xs font-semibold text-white bg-red-500 rounded-full">Agotado</span>;
     }
     if (isLowStock) {
-        return <span className="px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-100 rounded-full">Bajo Stock</span>;
+    return <span className="px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-100 rounded-full">Bajo Stock</span>;
     }
     if (margin < 0) {
-        return <span className="px-2 py-1 text-xs font-semibold text-red-800 bg-red-100 rounded-full">Margen Negativo</span>;
+    return <span className="px-2 py-1 text-xs font-semibold text-red-700 bg-red-100 rounded-full">Margen Negativo</span>;
     }
-    if (!product.image_url) {
-        return <span className="px-2 py-1 text-xs font-semibold text-gray-800 bg-gray-100 rounded-full">Sin Imagen</span>;
-    }
+    // No depender de image_url para el estado
     return <span className="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">Activo</span>;
+
 };
 
 

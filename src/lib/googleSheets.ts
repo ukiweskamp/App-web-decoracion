@@ -1,6 +1,20 @@
 import { google } from 'googleapis';
 import { Product, Customer, Sale, SaleItem } from '@/types';
 
+if (!process.env.GOOGLE_SHEETS_SPREADSHEET_ID) {
+  throw new Error('Falta GOOGLE_SHEETS_SPREADSHEET_ID');
+}
+if (!process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL) {
+  throw new Error('Falta GOOGLE_SERVICE_ACCOUNT_EMAIL');
+}
+if (!process.env.GOOGLE_PRIVATE_KEY) {
+  throw new Error('Falta GOOGLE_PRIVATE_KEY');
+}
+
+const SPREADSHEET_ID = process.env.GOOGLE_SHEETS_SPREADSHEET_ID!;
+const SERVICE_EMAIL = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL!;
+const PRIVATE_KEY = process.env.GOOGLE_PRIVATE_KEY!.replace(/\\n/g, '\n');
+
 // Configuración de la autenticación
 const auth = new google.auth.GoogleAuth({
   credentials: {
