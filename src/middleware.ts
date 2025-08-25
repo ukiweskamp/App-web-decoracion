@@ -8,32 +8,29 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
-  // Si el usuario está autenticado y trata de ir a /login, redirigir al dashboard
+  // ✅ Si está logueado e intenta ir a /login → redirige al home
   if (sessionValid && pathname.startsWith('/login')) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
-  // Si el usuario no está autenticado y trata de acceder a una ruta protegida, redirigir a /login
+  // ✅ Si NO está logueado y no está en /login → redirige a /login
   if (!sessionValid && !pathname.startsWith('/login')) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
-  
-  // Para las rutas de API, podríamos añadir una capa de seguridad similar si fuera necesario.
-  // Por ahora, solo protegemos las páginas.
 
   return NextResponse.next();
 }
 
-// Rutas que serán interceptadas por el middleware
+// ✅ Configuración: excluir rutas que NO deben pasar por el middleware
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - api/hooks (webhooks públicos con su propia seguridad)
+    /**
+     * Intercepta todo MENOS:
+     * - _next/static (archivos estáticos)
+     * - _next/image (optimizador de imágenes)
+     * - favicon.ico
+     * - api/* (APIs internas, incluidas las que usan Google Sheets)
      */
-    '/((?!_next/static|_next/image|favicon.ico|api/hooks).*)',
+    '/((?!_next/static|_next/image|favicon.ico|api).*)',
   ],
 };
