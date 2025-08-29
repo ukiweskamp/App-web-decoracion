@@ -77,7 +77,7 @@ const ProductTable: React.FC<ProductTableProps> = ({ products, onEdit, onDelete 
                                     <td className="px-4 py-4 md:px-6 text-right">{product.stock}</td>
                                     <td className="px-4 py-4 md:px-6 text-right">{CURRENCY_SYMBOL}{product.cost.toLocaleString('es-AR')}</td>
                                     <td className="px-4 py-4 md:px-6 text-right">{CURRENCY_SYMBOL}{product.price.toLocaleString('es-AR')}</td>
-                                    <td className={`px-4 py-4 md:px-6 text-right ${margin.amount < 0 ? 'text-red-600' : 'text-green-600'}`}> 
+                                    <td className={`px-4 py-4 md:px-6 text-right whitespace-nowrap ${margin.amount < 0 ? 'text-red-600' : 'text-green-600'}`}> 
                                         {CURRENCY_SYMBOL}{margin.amount.toLocaleString('es-AR')} ({margin.percent.toFixed(1)}%)
                                     </td>
                                     <td className="px-4 py-4 md:px-6"><ProductStatusBadge product={product} /></td>
