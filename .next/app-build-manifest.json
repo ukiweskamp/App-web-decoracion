@@ -21,16 +21,6 @@
       "static/chunks/main-app.js",
       "static/chunks/app/(main)/layout.js"
     ],
-    "/(main)/customers/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(main)/customers/page.js"
-    ],
-    "/(main)/products/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(main)/products/page.js"
-    ],
     "/(main)/sales/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
