@@ -16,6 +16,7 @@ export default function ProductsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [stockFilter, setStockFilter] = useState<'all' | 'in-stock' | 'out-of-stock'>('all');
 
   const fetchProducts = useCallback(async () => {
     setIsLoading(true);
@@ -84,12 +85,18 @@ export default function ProductsPage() {
   };
   
   const filteredProducts = useMemo(() => {
-    return products.filter(p => 
-        (p.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (p.sku || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (p.category || '').toLowerCase().includes(searchTerm.toLowerCase())
+    let filtered = products.filter(p => 
+      (p.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (p.sku || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (p.category || '').toLowerCase().includes(searchTerm.toLowerCase())
     );
-  }, [products, searchTerm]);
+    if (stockFilter === 'in-stock') {
+      filtered = filtered.filter(p => p.stock > 0);
+    } else if (stockFilter === 'out-of-stock') {
+      filtered = filtered.filter(p => p.stock === 0);
+    }
+    return filtered;
+  }, [products, searchTerm, stockFilter]);
 
   const handleExport = () => {
     exportToCsv('productos', filteredProducts);
@@ -104,12 +111,38 @@ export default function ProductsPage() {
             <Button onClick={() => handleOpenModal()}>Nuevo Producto</Button>
         </div>
       </div>
+
       <div className="mb-4">
         <Input 
           placeholder="Buscar por nombre, SKU o categoría..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          className="sm:w-64"
         />
+      </div>
+
+      <div className="flex gap-2 mb-4">
+        <Button
+          type="button"
+          variant={stockFilter === 'all' ? 'primary' : 'secondary'}
+          onClick={() => setStockFilter('all')}
+        >
+          Todos
+        </Button>
+        <Button
+          type="button"
+          variant={stockFilter === 'in-stock' ? 'primary' : 'secondary'}
+          onClick={() => setStockFilter('in-stock')}
+        >
+          Con stock
+        </Button>
+        <Button
+          type="button"
+          variant={stockFilter === 'out-of-stock' ? 'primary' : 'secondary'}
+          onClick={() => setStockFilter('out-of-stock')}
+        >
+          Agotados
+        </Button>
       </div>
 
       {isLoading && <p>Cargando productos...</p>}
